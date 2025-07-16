@@ -5,22 +5,22 @@ from torch import nn
 
 
 class LSTMCell(nn.Module):
-    def __init__(self, input_size: int, hidden_size: int):
+    def __init__(self, input_dim: int, hidden_dim: int):
         super(LSTMCell, self).__init__()
 
         # 入力層サイズと隠れ層サイズを設定
-        self.input_size = input_size
-        self.hidden_size = hidden_size
+        self.input_dim = input_dim
+        self.hidden_dim = hidden_dim
 
         # 各種重みとバイアスの定義
         self.weight_ih = nn.Parameter(
-            torch.randn(4 * self.hidden_size, self.input_size)
+            torch.randn(4 * self.hidden_dim, self.input_dim)
         )
         self.weight_hh = nn.Parameter(
-            torch.randn(4 * self.hidden_size, self.hidden_size)
+            torch.randn(4 * self.hidden_dim, self.hidden_dim)
         )
-        self.bias_ih = nn.Parameter(torch.zeros(4 * self.hidden_size))
-        self.bias_hh = nn.Parameter(torch.zeros(4 * self.hidden_size))
+        self.bias_ih = nn.Parameter(torch.zeros(4 * self.hidden_dim))
+        self.bias_hh = nn.Parameter(torch.zeros(4 * self.hidden_dim))
 
         # 活性化関数の定義
         self.sigmoid = nn.Sigmoid()
@@ -73,14 +73,14 @@ class LSTMCell(nn.Module):
 
 class LSTMLayer(nn.Module):
     def __init__(
-        self, input_size: int, hidden_size: int,
+        self, input_dim: int, hidden_dim: int,
         bidirectional: bool=False, residual: bool=False
     ):
         super(LSTMLayer, self).__init__()
 
         # 入力層サイズと隠れ層サイズを設定
-        self.input_size = input_size
-        self.hidden_size = hidden_size
+        self.input_dim = input_dim
+        self.hidden_dim = hidden_dim
 
         # 双方向にするかを設定
         self.bidirectional = bidirectional
@@ -89,9 +89,9 @@ class LSTMLayer(nn.Module):
         self.residual = residual
 
         # (双方向の)LSTMセルのインスタンスの作成
-        self.cell_fwd = LSTMCell(self.input_size, self.hidden_size)
+        self.cell_fwd = LSTMCell(self.input_dim, self.hidden_dim)
         if self.bidirectional:
-            self.cell_bwd = LSTMCell(self.input_size, self.hidden_size)
+            self.cell_bwd = LSTMCell(self.input_dim, self.hidden_dim)
 
     def forward(
         self, x: torch.Tensor, h_0: torch.Tensor, c_0: torch.Tensor,
@@ -156,14 +156,14 @@ class LSTMLayer(nn.Module):
 
 class LSTM(nn.Module):
     def __init__(
-        self, input_size: int, hidden_size: int, num_layers: int=1,
+        self, input_dim: int, hidden_dim: int, num_layers: int=1,
         bidirectional: bool=False, residual: bool=False
     ):
         super(LSTM, self).__init__()
 
         # 入力層サイズと隠れ層サイズを設定
-        self.input_size = input_size
-        self.hidden_size = hidden_size
+        self.input_dim = input_dim
+        self.hidden_dim = hidden_dim
         
         # 層数を設定
         self.num_layers = num_layers
@@ -177,12 +177,12 @@ class LSTM(nn.Module):
         # LSTM全体の構造を作成する
         self.layers = nn.ModuleList()
         for layer in range(self.num_layers):
-            in_size = self.input_size if layer == 0 else self.hidden_size * (
+            in_dim = self.input_dim if layer == 0 else self.hidden_dim * (
                 2 if self.bidirectional else 1
             )
             self.layers.append(
                 LSTMLayer(
-                    in_size, self.hidden_size,
+                    in_dim, self.hidden_dim,
                     self.bidirectional, self.residual
                 )
             )
@@ -223,12 +223,12 @@ class LSTM(nn.Module):
         if h_0 is None:
             h_0 = torch.zeros(
                 self.num_layers * num_directions, batch_size,
-                self.hidden_size, device=x.device
+                self.hidden_dim, device=x.device
             )
         if c_0 is None:
             c_0 = torch.zeros(
                 self.num_layers * num_directions, batch_size,
-                self.hidden_size, device=x.device
+                self.hidden_dim, device=x.device
             )
 
         # スタックの用意
