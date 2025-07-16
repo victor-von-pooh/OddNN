@@ -4,3 +4,5 @@
 ## ファイル
 - `rnn_base.py`
     - LSTM
+- `vae_base.py`
+    - VAE
