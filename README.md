@@ -15,7 +15,7 @@ source ./venv/bin/activate
 `pip3` を使用する場合, リポジトリのターミナル上で以下のコマンドを実行する.
 
 ```
-pip3 install --upgrade pip
+pip3 install -U pip
 pip3 install -r requirements.txt
 ```
 
