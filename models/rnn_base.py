@@ -74,7 +74,7 @@ class LSTMCell(nn.Module):
 class LSTMLayer(nn.Module):
     def __init__(
         self, input_dim: int, hidden_dim: int,
-        bidirectional: bool=False, residual: bool=False
+        bidirectional: bool = False, residual: bool = False
     ):
         super(LSTMLayer, self).__init__()
 
@@ -156,8 +156,8 @@ class LSTMLayer(nn.Module):
 
 class LSTM(nn.Module):
     def __init__(
-        self, input_dim: int, hidden_dim: int, num_layers: int=1,
-        bidirectional: bool=False, residual: bool=False
+        self, input_dim: int, hidden_dim: int, num_layers: int = 1,
+        bidirectional: bool = False, residual: bool = False
     ):
         super(LSTM, self).__init__()
 
