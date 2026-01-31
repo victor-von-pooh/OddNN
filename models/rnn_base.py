@@ -164,7 +164,7 @@ class LSTM(nn.Module):
         # 入力層サイズと隠れ層サイズを設定
         self.input_dim = input_dim
         self.hidden_dim = hidden_dim
-        
+
         # 層数を設定
         self.num_layers = num_layers
 
