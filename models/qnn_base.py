@@ -4,9 +4,9 @@ import torch
 from torch import nn
 from qiskit import QuantumCircuit
 from qiskit.circuit.library import real_amplitudes, zz_feature_map
-from qiskit.quantum_info import SparsePauliOp
 from qiskit.primitives import StatevectorEstimator as Estimator
 from qiskit.primitives import StatevectorSampler as Sampler
+from qiskit.quantum_info import SparsePauliOp
 from qiskit_machine_learning.connectors import TorchConnector
 from qiskit_machine_learning.neural_networks import EstimatorQNN, SamplerQNN
 from qiskit_machine_learning.utils import algorithm_globals
@@ -141,10 +141,10 @@ class QSampler(nn.Module):
         # QNN をセットアップ
         qnn_base = SamplerQNN(
             circuit=self.qc,
+            sampler=sampler,
             input_params=self.feature_map.parameters,
             weight_params=self.ansatz.parameters,
-            output_shape=self.output_dim,
-            sampler=sampler
+            output_shape=self.output_dim
         )
         initial_weights = 0.01 * (
             2 * algorithm_globals.random.random(qnn_base.num_weights) - 1
